@@ -36,10 +36,12 @@ RUN pnpm install --prod --frozen-lockfile
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/news.db ./news.db
+
+# Create directory for database
+RUN mkdir -p /app/data
 
 # Create volume for persistent database
-VOLUME ["/app/news.db"]
+VOLUME ["/app/data"]
 
 # Set environment variables
 ENV NODE_ENV=production

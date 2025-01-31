@@ -59,7 +59,8 @@ jobs:
             docker stop ${{ env.DOCKER_IMAGE }} || true
             docker rm ${{ env.DOCKER_IMAGE }} || true
 
-            mkdir -p /home/boursecrawler
+            # Create necessary directories
+            mkdir -p /home/boursecrawler/data
             cd /home/boursecrawler
 
             echo "${{ env.ENV_FILE }}" > .env
@@ -68,7 +69,7 @@ jobs:
             docker run -d \
               --name ${{ env.DOCKER_IMAGE }} \
               --restart unless-stopped \
-              -v /root/boursecrawler/news.db:/app/news.db \
+              -v /home/boursecrawler/data:/app/data \
               --env-file .env \
               ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest
 
