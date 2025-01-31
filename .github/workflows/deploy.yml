@@ -8,7 +8,6 @@ on:
 
 env:
   DOCKER_IMAGE: boursecrawler
-  DOCKER_REGISTRY: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   build-and-deploy:
@@ -18,6 +17,9 @@ jobs:
       packages: write
 
     steps:
+      - name: Set repository owner lowercase
+        run: echo "DOCKER_REGISTRY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+
       - name: Checkout code
         uses: actions/checkout@v4
 
