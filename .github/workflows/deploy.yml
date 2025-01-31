@@ -65,6 +65,7 @@ jobs:
 
             echo "${{ env.ENV_FILE }}" > .env
 
+            docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest
             # Run the new container
             docker run -d \
               --name ${{ env.DOCKER_IMAGE }} \
