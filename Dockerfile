@@ -17,8 +17,8 @@ COPY . .
 # Build the application
 RUN pnpm build
 
-# Verify dist directory exists
-RUN ls -la dist || exit 1
+# Copy register.js to dist
+RUN cp src/register.js dist/
 
 # Production stage
 FROM node:22-alpine
@@ -34,9 +34,8 @@ COPY package.json pnpm-lock.yaml ./
 # Install production dependencies only
 RUN pnpm install --prod --frozen-lockfile
 
-# Copy built files and config from builder stage
+# Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
 # Create directory for database
 RUN mkdir -p /app/data
@@ -47,5 +46,5 @@ VOLUME ["/app/data"]
 # Set environment variables
 ENV NODE_ENV=production
 
-# Start the application with tsconfig-paths
-CMD ["node", "-r", "tsconfig-paths/register", "dist/index.js"] 
+# Start the application
+CMD ["node", "-r", "./dist/register.js", "dist/index.js"] 
