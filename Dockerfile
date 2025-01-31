@@ -34,8 +34,9 @@ COPY package.json pnpm-lock.yaml ./
 # Install production dependencies only
 RUN pnpm install --prod --frozen-lockfile
 
-# Copy built files from builder stage
+# Copy built files and config from builder stage
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
 # Create directory for database
 RUN mkdir -p /app/data
@@ -46,5 +47,5 @@ VOLUME ["/app/data"]
 # Set environment variables
 ENV NODE_ENV=production
 
-# Start the application
-CMD ["node", "dist/index.js"] 
+# Start the application with tsconfig-paths
+CMD ["node", "-r", "tsconfig-paths/register", "dist/index.js"] 
