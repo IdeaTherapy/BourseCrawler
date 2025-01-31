@@ -8,7 +8,7 @@ WORKDIR /app
 # Copy package files
 COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies
+# Install ALL dependencies (including devDependencies)
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
@@ -16,6 +16,9 @@ COPY . .
 
 # Build the application
 RUN pnpm build
+
+# Verify dist directory exists
+RUN ls -la dist || exit 1
 
 # Production stage
 FROM node:22-alpine
